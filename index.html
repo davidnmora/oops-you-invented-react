@@ -1,0 +1,63 @@
+<body>
+
+
+<!--ROOT HTML TO APPEND TO:-->
+
+
+HTML and JS root:
+<div id="html-and-js-root" style="border: 1px dotted darkred; margin: 12px">
+	<h1 style="color: coral">The year:</h1>
+	<span class="year">2010</span>
+	<h1 style="color: orchid">Seconds past the minute:</h1>
+	<div class="seconds-container">
+		<span class="seconds-number">42</span>
+		<span style="font-style: italic">seconds</span>
+	</div>
+</div>
+
+Just JS root:
+<div id="js-root" style="border: 1px dotted blue; margin: 12px">
+	<!--Let's append the DOM children here!-->
+</div>
+
+Just Rehact root:
+<div id="rehact-root" style="border: 1px dotted forestgreen; margin: 12px">
+	<!--Let's append the DOM children here!-->
+</div>
+
+Creating re-usable functions with Rehact:
+<div id="rehact-functions-root" style="border: 1px dotted forestgreen; margin: 12px">
+	<!--Let's append the DOM children here!-->
+</div>
+
+Oops, I just invented React:
+<div id="react-root" style="border: 1px dotted gold; margin: 12px">
+	<!--Let's append the DOM children here!-->
+</div>
+
+JSX brings us back to the clear, declarative HTML we love:
+<div id="react-with-jsx-root" style="border: 1px dotted gold; margin: 12px">
+	<!--Let's append the DOM children here!-->
+</div>
+
+
+
+
+
+<!--JAVASCRIPTS EXPLORING DIFFERENT WAYS OF BUILDING A WEBPAGE-->
+
+<script>
+	// STATUS QUO, MIXES HTML AND JS: Directly mutating the existing DOM
+
+	const currentTime = new Date()
+
+	const year = document.querySelector('#html-and-js-root .year')
+	year.innerHTML = currentTime.getFullYear().toString()
+
+	const seconds = document.querySelector('#html-and-js-root .seconds-container .seconds-number')
+	seconds.innerHTML = currentTime.getSeconds().toString()
+</script>
+
+
+</body>
+
