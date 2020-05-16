@@ -1,0 +1,62 @@
+<body>
+
+<div id="root">
+	<div>The time</div>
+	<div class="time"></div>
+</div>
+
+<script>
+	// Directly mutating the existing DOM
+	const time = document.querySelector('.time')
+	const currentTime = new Date()
+	time.innerHTML = currentTime.getSeconds().toString()
+
+	// Adding to the DOM
+	// 1A. Create new DOM element
+	const theEnd = document.createElement('h1')
+	theEnd.innerHTML = 'The end!'
+
+	const child = document.createElement('div')
+	child.innerHTML = "I'm a child of the h1!"
+	theEnd.append(child)
+
+	// 1B. Add properties
+	theEnd.setAttribute('class', 'the-end')
+	theEnd.setAttribute('style', 'color: magenta')
+	theEnd.setAttribute('inventedattribute', 'attribute value')
+
+	// 2. Append new DOM element to the DOM
+	const root = document.getElementById('root')
+	root.append(theEnd)
+
+
+	const Rehact = {
+		createElement: (tagName, props, ...children) => {
+			const element = document.createElement(tagName)
+
+			Object.keys(props).forEach(
+				propName => element.setAttribute(propName, props[propName])
+			)
+
+			children.forEach(child => {
+				if (typeof(child) === 'string') {
+					element.innerHTML += child
+				} else {
+					element.append(child)
+				}
+
+			})
+			return element
+		},
+
+		render: (element, root) => root.append(element)
+	}
+
+
+
+	const myH2 = Rehact.createElement('h2', {style: 'color: blue'}, 'innner', 'more!')
+	Rehact.render(myH2, document.querySelector('#root'))
+
+</script>
+
+</body>
