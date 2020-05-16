@@ -1,4 +1,7 @@
 <body>
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 
 HTML and JS root:
 <div id="html-and-js-root" style="border: 1px dotted darkred; margin: 12px">
@@ -28,6 +31,11 @@ Creating re-usable functions with Rehact:
 
 Oops, I just invented React:
 <div id="react-root" style="border: 1px dotted gold; margin: 12px">
+	<!--Let's append the DOM children here!-->
+</div>
+
+JSX brings us back to the clear, declarative HTML we love:
+<div id="react-with-jsx-root" style="border: 1px dotted gold; margin: 12px">
 	<!--Let's append the DOM children here!-->
 </div>
 
@@ -144,6 +152,28 @@ Oops, I just invented React:
 	RehactDOM.render(
 		Title({style: 'color: coral'}, 'The Time:'),
 		document.querySelector('#rehact-functions-root')
+	)
+</script>
+
+
+<script>
+	const ReactTitle = (props, ...children) => React.createElement('h1', props, ...children)
+
+	ReactDOM.render(
+		ReactTitle({style: {color: 'coral'}}, 'The Time:'),
+		document.querySelector('#react-root')
+	)
+</script>
+
+
+<script type="text/babel">
+	const ReactWithJSXTitle = ({style, children}) => (
+		<h1 style={style}>{children}</h1>
+	)
+
+	ReactDOM.render(
+		<ReactWithJSXTitle style={{color: 'coral'}}>The time:</ReactWithJSXTitle>,
+		document.querySelector('#react-with-jsx-root')
 	)
 </script>
 
