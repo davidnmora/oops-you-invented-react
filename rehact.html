@@ -1,35 +1,64 @@
 <body>
 
-<div id="root">
-	<div>The time</div>
-	<div class="time"></div>
+HTML and JS root:
+<div id="html-and-js-root" style="border: 1px dotted darkred; margin: 12px">
+	<h1 style="color: coral">The year:</h1>
+	<div class="year">2010</div>
+	<h1 style="color: orchid">Seconds past the minute:</h1>
+	<div class="seconds">
+		<span class="seconds-number">42</span>
+		<span>seconds</span>
+	</div>
 </div>
 
+Just JS root:
+<div id="js-root" style="border: 1px dotted blue; margin: 12px">
+	<!--Let's append the DOM children here!-->
+</div>
+
+Just Rehact root:
+<div id="rehact-root" style="border: 1px dotted forestgreen; margin: 12px">
+	<!--Let's append the DOM children here!-->
+</div>
+
+Creating re-usable functions with Rehact:
+<div id="rehact-functions-root" style="border: 1px dotted gold; margin: 12px">
+	<!--Let's append the DOM children here!-->
+</div>
+
+
 <script>
-	// Directly mutating the existing DOM
-	const time = document.querySelector('.time')
+	// STATUS QUO, MIXES HTML AND JS: Directly mutating the existing DOM
 	const currentTime = new Date()
-	time.innerHTML = currentTime.getSeconds().toString()
 
-	// Adding to the DOM
+	const year = document.querySelector('#html-and-js-root .year')
+	year.innerHTML = currentTime.getFullYear().toString()
+
+	const seconds = document.querySelector('#html-and-js-root .seconds .seconds-number')
+	seconds.innerHTML = currentTime.getSeconds().toString()
+</script>
+
+
+<script>
+	// MORE FLEXIBLE APPROACH, BUT ANNOYING: Adding new DOM elements manually
+
 	// 1A. Create new DOM element
-	const theEnd = document.createElement('h1')
-	theEnd.innerHTML = 'The end!'
+	const yearTitle = document.createElement('h1')
+	// 1B. Set it's attributes (will become "properties" when rendered in DOM)
+	yearTitle.setAttribute('style', 'color: coral')
+	// 1C. Create and append its children
+	yearTitle.innerText = 'The time:'
 
-	const child = document.createElement('div')
-	child.innerHTML = "I'm a child of the h1!"
-	theEnd.append(child)
-
-	// 1B. Add properties
-	theEnd.setAttribute('class', 'the-end')
-	theEnd.setAttribute('style', 'color: magenta')
-	theEnd.setAttribute('inventedattribute', 'attribute value')
 
 	// 2. Append new DOM element to the DOM
-	const root = document.getElementById('root')
-	root.append(theEnd)
+	const root = document.querySelector('#js-root')
+	root.append(yearTitle)
+
+	// ETC ETC... *sigh*
+</script>
 
 
+<script>
 	const Rehact = {
 		createElement: (tagName, props, ...children) => {
 			const element = document.createElement(tagName)
@@ -47,16 +76,29 @@
 
 			})
 			return element
-		},
+		}
+	}
 
+	const RehactDOM = {
 		render: (element, root) => root.append(element)
 	}
 
+	const myTitleH1 = Rehact.createElement('h1', {style: 'color: coral'}, 'The time: ')
+	RehactDOM.render(
+		myTitleH1,
+		document.querySelector('#rehact-root')
+	)
+
+</script>
 
 
-	const myH2 = Rehact.createElement('h2', {style: 'color: blue'}, 'innner', 'more!')
-	Rehact.render(myH2, document.querySelector('#root'))
+<script>
+	const Title = (props, ...children) => Rehact.createElement('h1', props, ...children)
 
+	RehactDOM.render(
+		Title({style: 'color: coral'}, 'The Time:'),
+		document.querySelector('#rehact-functions-root')
+	)
 </script>
 
 </body>
