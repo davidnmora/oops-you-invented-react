@@ -88,11 +88,17 @@ JSX brings us back to the clear, declarative HTML we love:
 
 <script>
 	const Rehact = {
-		createElement: (tagName, props, ...children) => {
+		createElement: (tagName, props, children) => {
+			const protectedPropNames = {className: 'class'}
+			const kebabCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
+			const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabCase(prop)}: ${object[prop]}; `, '')
 			const element = document.createElement(tagName)
 
 			Object.keys(props || {}).forEach(
-				propName => element.setAttribute(propName, props[propName])
+				propName => {
+				  	const propValue = propName === 'style' ? cssifyObject(props[propName]) : props[propName]
+					element.setAttribute(protectedPropNames[propName] || propName, propValue)
+				}
 			)
 
 			children.forEach(child => {
@@ -108,7 +114,7 @@ JSX brings us back to the clear, declarative HTML we love:
 	}
 
 	const RehactDOM = {
-		render: (children, root) => {
+		render: (children, root) => { // TODO: technically, without fragments, React.js takes a container, not children
 			const _children = Array.isArray(children) ? children : [children]
 			_children.forEach(childElement => root.append(childElement))
 		}
@@ -116,11 +122,11 @@ JSX brings us back to the clear, declarative HTML we love:
 </script>
 
 <script>
-	const secondsTitleElement = Rehact.createElement('h1', {style: 'color: orchid'}, 'Seconds past the minute:')
+	const secondsTitleElement = Rehact.createElement('h1', {style: {color: 'orchid'}}, ['Seconds past the minute:'])
 
-	const secondsNumberElement = Rehact.createElement('span', {class: 'seconds-number'}, (new Date()).getSeconds().toString())
-	const secondsLabelElement = Rehact.createElement('span', {style: 'font-style: italic'}, ' seconds')
-	const secondsContainerElement = Rehact.createElement('div', {class: 'seconds-container'}, secondsNumberElement, secondsLabelElement)
+	const secondsNumberElement = Rehact.createElement('span', {className: 'seconds-number'}, [(new Date()).getSeconds().toString()])
+	const secondsLabelElement = Rehact.createElement('span', {style: {fontStyle: 'italic'}}, [' seconds'])
+	const secondsContainerElement = Rehact.createElement('div', {className: 'seconds-container'}, [secondsNumberElement, secondsLabelElement])
 
 	RehactDOM.render(
 		[secondsTitleElement, secondsContainerElement],
@@ -131,28 +137,23 @@ JSX brings us back to the clear, declarative HTML we love:
 
 
 <script>
-	const Title = (props) => Rehact.createElement('h1', props, ...props.children)
-	const Text = (props) => Rehact.createElement('span', props, ...props.children)
-	const Container = (props) => Rehact.createElement('div', props, ...props.children)
+	const Title = (props, children) => Rehact.createElement('h1', props, children)
+	const Text = (props, children) => Rehact.createElement('span', props, children)
+	const Container = (props, children) => Rehact.createElement('div', props, children)
 
 	RehactDOM.render(
 		[
-			Title({
-				style: 'color: orchid',
-				children: 'Seconds past the minute:'
-			}),
-			Container({
-				class: 'seconds-container',
-				children: [
-					Text({
-						class: 'seconds-number',
-						children: (new Date()).getSeconds().toString()}),
-					Text({
-						style: 'font-style: italic',
-						children: ' seconds'
-					})
-				]
-			}),
+			Title({style: {color: 'orchid'},}, [
+				'Seconds past the minute:'
+			]),
+			Container({className: 'seconds-container',}, [
+				Text({className: 'seconds-number',}, [
+					(new Date()).getSeconds().toString()
+				]),
+				Text({style: {fontStyle: 'italic'}}, [
+					' seconds'
+				])
+			]),
 		],
 		document.querySelector('#rehact-functions-root')
 	)
@@ -160,12 +161,9 @@ JSX brings us back to the clear, declarative HTML we love:
 
 
 <script>
-	const ReactTitle = (props, ...children) => React.createElement('h1', props, ...children)
+	(() => {
 
-	ReactDOM.render(
-		ReactTitle({style: {color: 'coral'}}, 'The Time:'),
-		document.querySelector('#react-root')
-	)
+	})()
 </script>
 
 
