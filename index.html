@@ -55,7 +55,7 @@ JSX brings us back to the clear, declarative HTML we love:
 	year.innerHTML = currentTime.getFullYear().toString()
 
 	const seconds = document.querySelector('#html-and-js-root .seconds-container .seconds-number')
-	seconds.innerHTML = currentTime.getSeconds().toString()
+	seconds.innerHTML = (new Date()).getSeconds().toString()
 </script>
 
 

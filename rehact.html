@@ -5,11 +5,9 @@
 
 HTML and JS root:
 <div id="html-and-js-root" style="border: 1px dotted darkred; margin: 12px">
-	<h1 style="color: coral">The year:</h1>
-	<span class="year">2010</span>
 	<h1 style="color: orchid">Seconds past the minute:</h1>
 	<div class="seconds-container">
-		<span class="seconds-number">42</span>
+		<span class="seconds-number"></span>
 		<span style="font-style: italic">seconds</span>
 	</div>
 </div>
@@ -42,14 +40,8 @@ JSX brings us back to the clear, declarative HTML we love:
 
 <script>
 	// STATUS QUO, MIXES HTML AND JS: Directly mutating the existing DOM
-
-	const currentTime = new Date()
-
-	const year = document.querySelector('#html-and-js-root .year')
-	year.innerHTML = currentTime.getFullYear().toString()
-
 	const seconds = document.querySelector('#html-and-js-root .seconds-container .seconds-number')
-	seconds.innerHTML = currentTime.getSeconds().toString()
+	seconds.innerHTML = (new Date()).getSeconds().toString()
 </script>
 
 
@@ -57,23 +49,6 @@ JSX brings us back to the clear, declarative HTML we love:
 	// MORE FLEXIBLE APPROACH, BUT ANNOYING: Adding new DOM elements manually
 
 	const root = document.querySelector('#js-root')
-
-	// 1. Create DOM element, set attributes ("properties" or "props" when DOM element is created), set children
-	const yearTitle = document.createElement('h1')
-	yearTitle.setAttribute('style', 'color: coral')
-	yearTitle.innerText = 'The time:'
-
-	// 2. Append new DOM element to the DOM
-	root.append(yearTitle)
-
-
-	// 1. Create DOM element, set attributes ("properties" or "props" when DOM element is created), set children
-	const yearNumber = document.createElement('span')
-	yearNumber.setAttribute('class', 'year')
-	yearNumber.innerText = currentTime.getFullYear().toString()
-
-	// 2. Append new DOM element to the DOM
-	root.append(yearNumber)
 
 
 	// 1. Create DOM element, set attributes ("properties" or "props" when DOM element is created), set children
@@ -93,7 +68,7 @@ JSX brings us back to the clear, declarative HTML we love:
 	// 1. Create DOM element, set attributes ("properties" or "props" when DOM element is created), set children
 	const secondsNumber = document.createElement('span')
 	secondsNumber.setAttribute('class', 'year')
-	secondsNumber.innerText = currentTime.getSeconds().toString()
+	secondsNumber.innerText = (new Date()).getSeconds().toString()
 
 	// 2. Append new DOM element to the DOM
 	secondsContainer.append(secondsNumber)
@@ -111,13 +86,12 @@ JSX brings us back to the clear, declarative HTML we love:
 
 </script>
 
-
 <script>
 	const Rehact = {
 		createElement: (tagName, props, ...children) => {
 			const element = document.createElement(tagName)
 
-			Object.keys(props).forEach(
+			Object.keys(props || {}).forEach(
 				propName => element.setAttribute(propName, props[propName])
 			)
 
@@ -134,12 +108,22 @@ JSX brings us back to the clear, declarative HTML we love:
 	}
 
 	const RehactDOM = {
-		render: (element, root) => root.append(element)
+		render: (children, root) => {
+			const _children = Array.isArray(children) ? children : [children]
+			_children.forEach(childElement => root.append(childElement))
+		}
 	}
+</script>
 
-	const myTitleH1 = Rehact.createElement('h1', {style: 'color: coral'}, 'The time: ')
+<script>
+	const secondsTitleElement = Rehact.createElement('h1', {style: 'color: orchid'}, 'Seconds past the minute:')
+
+	const secondsNumberElement = Rehact.createElement('span', {class: 'seconds-number'}, (new Date()).getSeconds().toString())
+	const secondsLabelElement = Rehact.createElement('span', {style: 'font-style: italic'}, ' seconds')
+	const secondsContainerElement = Rehact.createElement('div', {class: 'seconds-container'}, secondsNumberElement, secondsLabelElement)
+
 	RehactDOM.render(
-		myTitleH1,
+		[secondsTitleElement, secondsContainerElement],
 		document.querySelector('#rehact-root')
 	)
 
@@ -147,10 +131,29 @@ JSX brings us back to the clear, declarative HTML we love:
 
 
 <script>
-	const Title = (props, ...children) => Rehact.createElement('h1', props, ...children)
+	const Title = (props) => Rehact.createElement('h1', props, ...props.children)
+	const Text = (props) => Rehact.createElement('span', props, ...props.children)
+	const Container = (props) => Rehact.createElement('div', props, ...props.children)
 
 	RehactDOM.render(
-		Title({style: 'color: coral'}, 'The Time:'),
+		[
+			Title({
+				style: 'color: orchid',
+				children: 'Seconds past the minute:'
+			}),
+			Container({
+				class: 'seconds-container',
+				children: [
+					Text({
+						class: 'seconds-number',
+						children: (new Date()).getSeconds().toString()}),
+					Text({
+						style: 'font-style: italic',
+						children: ' seconds'
+					})
+				]
+			}),
+		],
 		document.querySelector('#rehact-functions-root')
 	)
 </script>
