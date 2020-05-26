@@ -1,10 +1,7 @@
 <body>
-<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
-<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 
 HTML and JS root:
-<div id="html-and-js-root" style="border: 1px dotted darkred; margin: 12px">
+<div id="html-and-js-root" style="border: 1px dotted red; margin: 12px">
 	<div class="seconds-container">
 		<span class="seconds-number"></span>
 		<span style="font-style: italic">seconds</span>
@@ -47,35 +44,32 @@ JSX brings us back to the clear, declarative HTML we love:
 <script>
 	// MORE FLEXIBLE APPROACH, BUT ANNOYING: Adding new DOM elements manually
 
-	const root = document.querySelector('#js-root')
+	(() => {
+		const root = document.querySelector('#js-root')
 
-	// NESTING: create the parent div for the seconds section
-	// 1. Create DOM element, set attributes ("properties" or "props" when DOM element is created), set children
-	const secondsContainer = document.createElement('div')
-	secondsContainer.setAttribute('class', 'seconds-container')
+		const secondsContainer = document.createElement('div')
+		secondsContainer.setAttribute('class', 'seconds-container')
 
-	// 1. Create DOM element, set attributes ("properties" or "props" when DOM element is created), set children
-	const secondsNumber = document.createElement('span')
-	secondsNumber.setAttribute('class', 'year')
-	secondsNumber.innerText = (new Date()).getSeconds().toString()
+		const secondsNumber = document.createElement('span')
+		secondsNumber.setAttribute('class', 'year')
+		secondsNumber.innerText = (new Date()).getSeconds().toString()
 
-	// 2. Append new DOM element to the DOM
-	secondsContainer.append(secondsNumber)
+		secondsContainer.append(secondsNumber)
 
-	// 1. Create DOM element, set attributes ("properties" or "props" when DOM element is created), set children
-	const secondsText = document.createElement('span')
-	secondsText.setAttribute('style', 'font-style: italic')
-	secondsText.innerText = ' seconds'
+		const secondsText = document.createElement('span')
+		secondsText.setAttribute('style', 'font-style: italic')
+		secondsText.innerText = ' seconds'
 
-	// 2. Append new DOM element to the DOM
-	secondsContainer.append(secondsText)
+		secondsContainer.append(secondsText)
 
-	// 2. Append new DOM element to the DOM
-	root.append(secondsContainer)
+		root.append(secondsContainer)
+	})()
 
 </script>
 
 <script>
+	// Create a library to abstract the repetitive DOM manipulation code.
+	//For JS-friendliness, use "className" to steer clear of JS "class" keyword and use style objects (rather than strings)
 	const Rehact = {
 		createElement: (tagName, props, children) => {
 			const protectedPropNames = {className: 'class'}
@@ -108,13 +102,13 @@ JSX brings us back to the clear, declarative HTML we love:
 </script>
 
 <script>
-	// Abstract DOM details to helper functions: Rehact for creation and RehactDOM for appending to the existing DOM root
-	const secondsNumberElement = Rehact.createElement('span', {className: 'seconds-number'}, [(new Date()).getSeconds().toString()])
-	const secondsLabelElement = Rehact.createElement('span', {style: {fontStyle: 'italic'}}, [' seconds'])
-	const secondsContainerElement = Rehact.createElement('div', {className: 'seconds-container'}, [secondsNumberElement, secondsLabelElement])
+	// Abstract DOM details to helper libraries: Rehact for creation and RehactDOM for appending to the existing DOM root
+	const secondsNumber = Rehact.createElement('span', {className: 'seconds-number'}, [(new Date()).getSeconds().toString()])
+	const secondsLabel = Rehact.createElement('span', {style: {fontStyle: 'italic'}}, [' seconds'])
+	const secondsContainer = Rehact.createElement('div', {className: 'seconds-container'}, [secondsNumber, secondsLabel])
 
 	RehactDOM.render(
-		secondsContainerElement,
+		secondsContainer,
 		document.querySelector('#rehact-root')
 	)
 
@@ -122,31 +116,36 @@ JSX brings us back to the clear, declarative HTML we love:
 
 
 <script>
-	// Create & nest UI element functions for re-usability and readability
-	const Text = (props, children) => Rehact.createElement('span', props, children)
-	const Container = (props, children) => Rehact.createElement('div', props, children)
+	// Create & nest UI element functions for re-usability and readability.
+	// Use an uppercase naming convention to signal these are re-usable, "class-like" entities.
+		(() => {
+			const Text = (props, children) => Rehact.createElement('span', props, children)
+			const Container = (props, children) => Rehact.createElement('div', props, children)
 
-	RehactDOM.render(
-		Container({className: 'seconds-container',}, [
-			Text({className: 'seconds-number',}, [
-				(new Date()).getSeconds().toString()
-			]),
-			Text({style: {fontStyle: 'italic'}}, [
-				' seconds'
-			])
-		]),
-		document.querySelector('#rehact-functions-root')
-	)
+			RehactDOM.render(
+				Container({className: 'seconds-container',}, [
+					Text({className: 'seconds-number',}, [
+						(new Date()).getSeconds().toString()
+					]),
+					Text({style: {fontStyle: 'italic'}}, [
+						' seconds'
+					])
+				]),
+				document.querySelector('#rehact-functions-root')
+			)
+		})()
 </script>
 
 
+<script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+<script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
 <script>
-	// Import React libraries. Change "Rehact" to "React" --> works perfectly!
+	// Import React libraries. Change "Rehact" --> "React" ... API matches exactly! (what a coincidence... ;)
 	(() => {
-		const Text = (props, children) => Rehact.createElement('span', props, children)
-		const Container = (props, children) => Rehact.createElement('div', props, children)
+		const Text = (props, children) => React.createElement('span', props, children)
+		const Container = (props, children) => React.createElement('div', props, children)
 
-		RehactDOM.render(
+		ReactDOM.render(
 			Container({className: 'seconds-container',}, [
 				Text({className: 'seconds-number',}, [
 					(new Date()).getSeconds().toString()
@@ -161,6 +160,7 @@ JSX brings us back to the clear, declarative HTML we love:
 </script>
 
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/6.26.0/babel.min.js"></script>
 <script type="text/babel">
 	// UI matters (even for a library): switch to JSX (which Babel transpiles to pure JS)
 	(() => {
