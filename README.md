@@ -1,4 +1,3 @@
-# oops-you-invented-react
-The code (and blog MD) for the talk "Oops, you invented React: how I wish I learned the web's most popuplar frontend framework"
+# oops-you-invented-react: read the [blog post](https://dev.to/davidnmora/oops-you-accidentally-invented-react-js-35ac)!
 
-Jump into `rehact.html` for the code!
+Jump into `rehact.html` for the (runnable) code!
