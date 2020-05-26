@@ -42,13 +42,11 @@ JSX brings us back to the clear, declarative HTML we love:
 
 
 <script>
-	// MORE FLEXIBLE APPROACH, BUT ANNOYING: Adding new DOM elements manually
-
+	// Create all HTML manually in JS: imperative, hard to read, and bears little resemblance to HTML or UI.
 	(() => {
-		const root = document.querySelector('#js-root')
-
 		const secondsContainer = document.createElement('div')
 		secondsContainer.setAttribute('class', 'seconds-container')
+
 
 		const secondsNumber = document.createElement('span')
 		secondsNumber.setAttribute('class', 'year')
@@ -56,12 +54,15 @@ JSX brings us back to the clear, declarative HTML we love:
 
 		secondsContainer.append(secondsNumber)
 
+
 		const secondsText = document.createElement('span')
 		secondsText.setAttribute('style', 'font-style: italic')
 		secondsText.innerText = ' seconds'
 
 		secondsContainer.append(secondsText)
 
+
+		const root = document.querySelector('#js-root')
 		root.append(secondsContainer)
 	})()
 
@@ -96,6 +97,7 @@ JSX brings us back to the clear, declarative HTML we love:
 		}
 	}
 
+
 	const RehactDOM = {
 		render: (container, root) => root.append(container)
 	}
@@ -118,22 +120,22 @@ JSX brings us back to the clear, declarative HTML we love:
 <script>
 	// Create & nest UI element functions for re-usability and readability.
 	// Use an uppercase naming convention to signal these are re-usable, "class-like" entities.
-		(() => {
-			const Text = (props, children) => Rehact.createElement('span', props, children)
-			const Container = (props, children) => Rehact.createElement('div', props, children)
+	(() => {
+		const Text = (props, children) => Rehact.createElement('span', props, children)
+		const Container = (props, children) => Rehact.createElement('div', props, children)
 
-			RehactDOM.render(
-				Container({className: 'seconds-container',}, [
-					Text({className: 'seconds-number',}, [
-						(new Date()).getSeconds().toString()
-					]),
-					Text({style: {fontStyle: 'italic'}}, [
-						' seconds'
-					])
+		RehactDOM.render(
+			Container({className: 'seconds-container',}, [
+				Text({className: 'seconds-number',}, [
+					(new Date()).getSeconds().toString()
 				]),
-				document.querySelector('#rehact-functions-root')
-			)
-		})()
+				Text({style: {fontStyle: 'italic'}}, [
+					' seconds'
+				])
+			]),
+			document.querySelector('#rehact-functions-root')
+		)
+	})()
 </script>
 
 
