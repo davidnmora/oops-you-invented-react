@@ -261,7 +261,7 @@ ReactDOM.render(
 	</Container>,
 	document.querySelector('#root')
 )
-````
+```
 
 You lean back in your chair and smile.
 
@@ -269,7 +269,7 @@ You lean back in your chair and smile.
 
 An email notification chimes. Alejandra's inviting you to some platform called "Facebook." You scoff.
 
-Who needs "Facebook" when you've got `React.js`?
+*Who needs "Facebook" when you've got `React.js`?*
 
 ****
 
