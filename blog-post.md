@@ -1,8 +1,10 @@
 It's the 2020s, and React.js is the most popular frontend framework. Everyone's using it. Everyone's hiring for it.
 
-And everyone *has no idea how it works.*
+*And everyone has no idea how it really works.*
 
 But not you. Why? Because, way back in 2010, you accidentally invented React...
+
+<sub>[Everything that follows is real code. Play with it here!](https://github.com/davidnmora/oops-you-invented-react)</sub>
 
 ******
 
@@ -23,20 +25,20 @@ Bieber is in full swing, you definitely don't have a crush on your programming b
 </script>
 
 ```
-#### Here's what you love about it:
-1. HTML is super declarative: it shows you exactly the structure of the page.
-2. JS is dynamic. You can update stuff on the fly.
+#### Here's what you ❤️ about it:
+1. **HTML** is super declarative: it shows you exactly the structure of the page.
+2. **JS** is event-driven & composable. You can update stuff on the fly.
 
-#### And here's what sucks about it:
-1. HTML is static. And repetitive. Want 20 images? Get ready to copy and paste. Want to update them dynamically based on data? No can do. *Ahh, but isn't that where JS comes into play?* Sure, but it sucks...
-2. Writing JS feels like being a surgeon who blindly reaches into his HTML patient's body, slices stuff up, and hopes it works.
+#### And here's what sucks about it: 😤
+1. **HTML** is static. And repetitive. Want 20 images? Get ready to copy and paste. Want to update them dynamically based on data? No can do. *Ahh, but isn't that where JS comes into play?* Sure, but it sucks...
+2. Writing & executing **JS** feels like being a surgeon who blindly reaches into his HTML patient's body, slices stuff up, and hopes it works.
 
 
-## Then you have an 💡: let's do everything in JS
+## Then you have an 💡: let's do everything in JS!
 
-JS is dynamic, event-driven, and easy to compose into modular functions and files. A pure JS approach could solve all the pitfalls of working in both HTML & JS!
+*But can we create HTML elements with only JS?* 
 
-*But can we create HTML elements with only JS?* We can!
+We can!
 
 ## ... and it's an imperative, ugly mess 😱
 
@@ -59,22 +61,22 @@ secondsText.innerText = ' seconds'
 secondsContainer.append(secondsText)
 
 
-const root = document.querySelector('#js-root')
+const root = document.querySelector('#root')
 root.append(secondsContainer)
 ```
 
 You're kind of crushed: your 💡 wasn't so great.
 
-Then you squint at your code. And it hits you -- you're basically doing 3 things over and over again:
+Then you squint at your code and something hits you -- you're doing 3 things over and over again:
 1. creating DOM element of a certain type
 2. setting its properties
 3. appending it to a parent DOM element
 
-And since you're a programmer, you realize this is the perfect time to create re-usable functions that abstract those 3 things:
+This is the perfect time to create re-usable functions that abstract those 3 things!
 
-🎉 Since you're a human you decide to name your baby 🍼: this "re-hacked" version of web dev shall be called `Rehact`.
+You name this "re-hacked" version of web dev `Rehact.js`.
 
-Then, since you're still also a programmer, you pre-maturely add two wrapper objects in a way that feels right for reasons you can't explain: `Rehact` and `RehactDOM`.
+You suspect this library might get huge, so you preemptively it in two: `Rehact` for element creation and `RehactDOM` for hooking into the existing DOM:
 
  ```javascript
 const Rehact = {
@@ -109,7 +111,7 @@ const RehactDOM = {
 }
 ```
 
-And here it is in action!
+And my! isn't it easier on the eyes in action?
 
 ```javascript 
 const secondsNumber = Rehact.createElement('span', {className: 'seconds-number'}, [(new Date()).getSeconds().toString()])
@@ -118,16 +120,16 @@ const secondsContainer = Rehact.createElement('div', {className: 'seconds-contai
 
 RehactDOM.render(
 	secondsContainer,
-	document.querySelector('#rehact-root')
+	document.querySelector('#root')
 )
 ```
 
-# You've abstracted away the ugly, repetitive parts of DOM creation. But can you get the re-usable, declarative feel of HTML?
+# Great, you've abstracted away the repetitive parts of DOM creation. But can you get the re-usable, declarative feel of HTML?
 
 // TODO: UPDATE THIS TO NEW, SIMPLER UI
-For example, what if you want use `orchid` colored `h1` titles throughout your codebase? Could you create a simple function to encapsulate that code?
+For example, what if you wanted to use a standard `SecondsContainer` abstraction throughout your code base?
 
-You can! So you decide to wrap `Rehact.createElement` in a tiny, simple functions you can re-use, and which can contain any logic specific to itself.
+You decide to wrap `Rehact.createElement` in a simple functions you can re-use:
 
 
 ```javascript
@@ -143,82 +145,75 @@ RehactDOM.render(
 			' seconds'
 		])
 	]),
-	document.querySelector('#rehact-functions-root')
+	document.querySelector('#root')
 )
 ```
 
-Then it strikes you: your JS indentation is reminding you of HTML's indentation. You're onto something! You've re-created the same nested structure of HTML -- but in dynamic JS!
+You look a little closer: your JS indentation is now reminding you of the original HTML in now reproduces. You're onto something!
 
-## ... except it's super ugly and no one wants to use it.
+## ... except it's still super ugly and no one wants to use it.
 
-Including your best friend and coding mentor Alejandra. (But, like, you're *basically* almost as good as her. Like, really really close.)
+Including your best friend and coding mentor Alejandra.
 
-You: "Alejandra, I re-invented web dev! It's all JS now!"
-Alejandra: "You mean you wrecked web dev. It's all ugly now."
-You: "... uh, so what's the best way to send you the library? AIM?"
-Alejandra: (turns and  types `$('.rehact').never()`)
+**You**: "Alejandra, I re-invented web dev! It's all JS now!"
 
-## Forget Alejandra. She wasn't *that* cool anyway... (plus, you're basically almost as good as her)
+**Alejandra**: "You mean you wrecked web dev. It's all ugly now."
 
-But after blocking Alejandra on Myspace (and then un-blocking her to get some debugging help), you realize she was kind of onto something:
+**You**: "... uh, so what's the best way to send you it? your hotmail?"
+
+**Alejandra**: `$('.rehact').forgetIt()`
+
+
+## Forget Alejandra. She wasn't *that* cool anyway... (plus, you definitely never had a crush on her)
+
+But after blocking Alejandra on Myspace (and then un-blocking her to get some debugging help), you realize she was onto something:
 
 #### If the user interface sucks, your product fails.
 
-That goes for websites, devices, and (it turns out) even programming libraries.
+That goes for websites, devices, and (it turns out) programming libraries.
 
-So you send Alejandra another message on Myspace:
+So you send Alejandra another message:
 
-You: "Thanks for the coding help. Also, how might I make my `Rehact` library prettier and easier to use?"
-Alejandra: "Make it HTML"
-You: "I hate you"
-Alejandra: "Anytime"
+**You**: "I get that Rehact is a tangle of braces and parens. But it's powerful. How might I make it more enjoyable to code with?"
+**Alejandra**: "Make it HTML"
+**You**: "I hate you"
+**Alejandra**: "Anytime"
 
 ## Forget Alejandra!!
 
-Forget her, and forget her stupid code, and her little dog, too, and forget --
+😤
 
-## ... wait, actually don't, that's brilliant! 💡
+## 🤔 ... wait, actually don't, that's brilliant! 💡
 
-It's true: people *already* know and love HTML. So what if you let people just write HTML inside your `Rehact` functions, and then just ran a transpiler that converted it back to valid `Rehact` JS code?
+It's true: people *already* know and love HTML. And Rehact is largely just a JS-flavored way of specifying HTML. 
 
+*So what if you let people just write HTML inside your `Rehact` functions*, and then just transpiled it back to valid `Rehact` JS code for execution?
 
-// todo: SHOULD MABYE I GET INTERRUTED HERE? AND THEN SEE JSX ONLY WHEN I LOOK AT REACT?
-## So you create a transpiler that converts any HTML written inside `Rehact` functions to plain `Rehact.createElement` JS, and call it `JSH` (JS + HTML)
+Not only could you let people write HTML elements like `div` or `h2`, but you could also let people represent `Rehact` functions as if they were HTML, eg re-writing `Container({className: 'container'})` as `<Container class="container" />`.
 
-(Then you realize XML is more general than HTML, so you rename it JSX.)
+You could call the transpiler `JSH`: JS + HTML. (Or maybe `JSX`, for JS + XML.)
 
-And *viola!* you've finally got the programming "user interface" everyone will love to interface with:
+It's a programming "user interface" that'll make `Rehact` a joy to adopt!
 
+But before you can begin on the `JSX` transpiler, you get a message from Alejandra:
 
-```html
-stuff
-```
+## "Oh, and please stop messaging me on Myspace. It's the 2020s, for gosh sakes get on a platform that's actually relevant."
 
-Your chest swells. You start to tear up (a little).
+You freeze.
 
-Staring at what you've just created, you're looking upon the sunrise of a new era of web dev. At a new era of human progress, a new era of --
+You've been known to be absent-minded, but how did you accidentally miss *a decade of web dev evolution*?
 
-A notification pings from your phone. It's a message from Alejandra:
+But surely, even in a decade, no one's thought of something as genius as `Rehact`: it's declarative, component-based, and easy to learn once and use anywhere.
 
-## "Please stop messaging me on Myspace. It's the 2020s, for gosh sakes get on a platform that's actually relevant."
-
-You freeze. Your hands start to sweat (ok, who are we kidding, they were already sweating because you thought you'd just revolutionized web dev.)
-
-You've been known to be absent-minded. But how did you accidentally miss *a decade of web dev evolution*? (And how could Myspace possibly ever stop being **the** hottest space on the web?!)
-
-You take a deep breath. But surely, even in a decade, no one's thought of something as genius as `Rehact`: it's declarative, component-based, and easy to learn and use anywhere.
-
-You start scanning the web for popular libraries, and one catches your eye: `React.js`? (Where is the 'h' and who came up with such dumb name?)
+Scanning the web for popular libraries, `React.js` catches your eye.
 
 You open the homepage:
 
-[screenshot of the 3 main ideas of react on the webpage]
-
-For a moment you can't move.
+![image](https://user-images.githubusercontent.com/6570507/82911380-af7a0200-9f20-11ea-9095-3da44ce0ab42.png)
 
 Then you get yourself to scroll down and see this:
 
-[JSX example]
+![image](https://user-images.githubusercontent.com/6570507/82912345-d8e75d80-9f21-11ea-9a0f-7ff1fea45653.png)
 
 *How did they... could it really be the case that...*
 
@@ -239,20 +234,40 @@ ReactDOM.render(
 			' seconds'
 		])
 	]),
-	document.querySelector('#react-root')
+	document.querySelector('#root')
 )
 ```
 
-You shudder. Then you smile.
+## You even try the JSX syntactical sugar, too:
 
-"Well," you chuckle to yourself, "I guess I accidentally invented React.js..."
+```javascript
+const Text = (props) => <span {...props}>{props.children}</span>
+const Container = (props) => <div {...props}>{props.children}</div>
 
-An email notification chimes. You check your phone. Alejandra's inviting you to some platform called "Facebook." You scoff and put the phone down.
+ReactDOM.render(
+	<Container className="seconds-container">
+		<Text className="seconds-number">{(new Date()).getSeconds().toString()}</Text>
+		<Text style={{fontStyle: 'italic'}}>{' seconds'}</Text>
+	</Container>,
+	document.querySelector('#react-with-jsx-root')
+)
+````
 
-Forget "Facebook." Who needs "Facebook" when you've got React.js?
+You lean back in your chair and smile.
+
+"Oops," you chuckle, "I guess I accidentally invented React.js..."
+
+An email notification chimes. Alejandra's inviting you to some platform called "Facebook." You scoff.
+
+Who needs "Facebook" when you've got `React.js`?
 
 ****
 
-This post is a distillation of a talk I gave at an Inland Empire Software Development meetup.
+This post is a distillation of [a talk I gave at an Inland Empire Software Development meetup](https://youtu.be/3MXrYVqYklg?t=37) .
 
-It was directly inspired by this talk, and informed by this talk by the creator of React (no, not Dan Abramov, silly)
+The code was directly inspired by [Kent C. Dodds' talk, "The introduction to React you've been missing,"](https://youtu.be/SAIdyBFHfVU) and the story was based loosely off [this account by React's creator](https://youtu.be/5fG_lyNuEAw?t=702) (no, not Dan Abramov, silly)
+
+Please note this article is meant as **an incomplete, rough introduction to React's origin**. While [all the code really works](https://github.com/davidnmora/oops-you-invented-react), it completely skips over many things, most glaringly React's "virtual DOM."
+
+However, omitting class-based components was intentional. Let's please forget those existed. 😉
+
