@@ -219,13 +219,15 @@ You open the homepage:
 
 ![image](https://user-images.githubusercontent.com/6570507/82911380-af7a0200-9f20-11ea-9095-3da44ce0ab42.png)
 
-Then you get yourself to scroll down and see this:
+Then you scroll down and see:
 
 ![image](https://user-images.githubusercontent.com/6570507/82912345-d8e75d80-9f21-11ea-9a0f-7ff1fea45653.png)
 
-*How did they... could it really be the case that...*
+you toggle off `JSX` and to your amazement find `React.createElement()` transpiled underneath!
 
-Before you can think more, you grab distribution links to React, ReactDOM, and JSX, throw it into your Rehact HTML file, delete the 'h' from `Rehact`, refresh your browser and...
+![image](https://user-images.githubusercontent.com/6570507/82921169-eeae5000-9f2c-11ea-95e6-420f66a03b9c.png)
+
+Your head is spinning. You grab distribution links to React, ReactDOM, and JSX, throw it into your Rehact HTML file, delete the 'h' from `Rehact`, refresh your browser and...
 
 ### ... everything still works.
 
@@ -246,7 +248,7 @@ ReactDOM.render(
 )
 ```
 
-## You even try the JSX syntactical sugar, too:
+## ... even the `JSX` "user interface":
 
 ```javascript
 const Text = (props) => <span {...props}>{props.children}</span>
@@ -277,5 +279,5 @@ The code was directly inspired by [Kent C. Dodds' talk, "The introduction to Rea
 
 Please note this article is meant as **an incomplete, rough introduction to React's origin**. While [all the code really works](https://github.com/davidnmora/oops-you-invented-react), it completely skips over many things, most glaringly React's "virtual DOM."
 
-However, omitting class-based components was intentional. Let's please forget those existed. 😉
+However, omitting class-based components *was* intentional. Let's please forget those ever existed. 😉
 
