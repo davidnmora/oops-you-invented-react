@@ -5,7 +5,6 @@
 
 HTML and JS root:
 <div id="html-and-js-root" style="border: 1px dotted darkred; margin: 12px">
-	<h1 style="color: orchid">Seconds past the minute:</h1>
 	<div class="seconds-container">
 		<span class="seconds-number"></span>
 		<span style="font-style: italic">seconds</span>
@@ -50,16 +49,6 @@ JSX brings us back to the clear, declarative HTML we love:
 
 	const root = document.querySelector('#js-root')
 
-
-	// 1. Create DOM element, set attributes ("properties" or "props" when DOM element is created), set children
-	const secondsTitle = document.createElement('h1')
-	secondsTitle.setAttribute('style', 'color: orchid')
-	secondsTitle.innerText = 'Seconds past the minute:'
-
-	// 2. Append new DOM element to the DOM
-	root.append(secondsTitle)
-
-
 	// NESTING: create the parent div for the seconds section
 	// 1. Create DOM element, set attributes ("properties" or "props" when DOM element is created), set children
 	const secondsContainer = document.createElement('div')
@@ -96,7 +85,7 @@ JSX brings us back to the clear, declarative HTML we love:
 
 			Object.keys(props || {}).forEach(
 				propName => {
-				  	const propValue = propName === 'style' ? cssifyObject(props[propName]) : props[propName]
+					const propValue = propName === 'style' ? cssifyObject(props[propName]) : props[propName]
 					element.setAttribute(protectedPropNames[propName] || propName, propValue)
 				}
 			)
@@ -107,29 +96,25 @@ JSX brings us back to the clear, declarative HTML we love:
 				} else {
 					element.append(child)
 				}
-
 			})
+
 			return element
 		}
 	}
 
 	const RehactDOM = {
-		render: (children, root) => { // TODO: technically, without fragments, React.js takes a container, not children
-			const _children = Array.isArray(children) ? children : [children]
-			_children.forEach(childElement => root.append(childElement))
-		}
+		render: (container, root) => root.append(container)
 	}
 </script>
 
 <script>
-	const secondsTitleElement = Rehact.createElement('h1', {style: {color: 'orchid'}}, ['Seconds past the minute:'])
-
+	// Abstract DOM details to helper functions: Rehact for creation and RehactDOM for appending to the existing DOM root
 	const secondsNumberElement = Rehact.createElement('span', {className: 'seconds-number'}, [(new Date()).getSeconds().toString()])
 	const secondsLabelElement = Rehact.createElement('span', {style: {fontStyle: 'italic'}}, [' seconds'])
 	const secondsContainerElement = Rehact.createElement('div', {className: 'seconds-container'}, [secondsNumberElement, secondsLabelElement])
 
 	RehactDOM.render(
-		[secondsTitleElement, secondsContainerElement],
+		secondsContainerElement,
 		document.querySelector('#rehact-root')
 	)
 
@@ -137,15 +122,31 @@ JSX brings us back to the clear, declarative HTML we love:
 
 
 <script>
-	const Title = (props, children) => Rehact.createElement('h1', props, children)
+	// Create & nest UI element functions for re-usability and readability
 	const Text = (props, children) => Rehact.createElement('span', props, children)
 	const Container = (props, children) => Rehact.createElement('div', props, children)
 
 	RehactDOM.render(
-		[
-			Title({style: {color: 'orchid'},}, [
-				'Seconds past the minute:'
+		Container({className: 'seconds-container',}, [
+			Text({className: 'seconds-number',}, [
+				(new Date()).getSeconds().toString()
 			]),
+			Text({style: {fontStyle: 'italic'}}, [
+				' seconds'
+			])
+		]),
+		document.querySelector('#rehact-functions-root')
+	)
+</script>
+
+
+<script>
+	// Import React libraries. Change "Rehact" to "React" --> works perfectly!
+	(() => {
+		const Text = (props, children) => Rehact.createElement('span', props, children)
+		const Container = (props, children) => Rehact.createElement('div', props, children)
+
+		RehactDOM.render(
 			Container({className: 'seconds-container',}, [
 				Text({className: 'seconds-number',}, [
 					(new Date()).getSeconds().toString()
@@ -154,28 +155,26 @@ JSX brings us back to the clear, declarative HTML we love:
 					' seconds'
 				])
 			]),
-		],
-		document.querySelector('#rehact-functions-root')
-	)
-</script>
-
-
-<script>
-	(() => {
-
+			document.querySelector('#react-root')
+		)
 	})()
 </script>
 
 
 <script type="text/babel">
-	const ReactWithJSXTitle = ({style, children}) => (
-		<h1 style={style}>{children}</h1>
-	)
+	// UI matters (even for a library): switch to JSX (which Babel transpiles to pure JS)
+	(() => {
+		const Text = (props) => <span {...props}>{props.children}</span>
+		const Container = (props) => <div {...props}>{props.children}</div>
 
-	ReactDOM.render(
-		<ReactWithJSXTitle style={{color: 'coral'}}>The time:</ReactWithJSXTitle>,
-		document.querySelector('#react-with-jsx-root')
-	)
+		ReactDOM.render(
+			<Container className="seconds-container">
+				<Text className="seconds-number">{(new Date()).getSeconds().toString()}</Text>
+				<Text style={{fontStyle: 'italic'}}>{' seconds'}</Text>
+			</Container>,
+			document.querySelector('#react-with-jsx-root')
+		)
+	})()
 </script>
 
 </body>
