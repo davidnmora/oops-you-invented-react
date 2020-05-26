@@ -20,8 +20,8 @@ Bieber is in full swing, you definitely don't have a crush on your friend Alejan
 </div>
 
 <script>
-	const seconds = document.querySelector('#root .seconds-container .seconds-number')
-	seconds.innerHTML = (new Date()).getSeconds().toString()
+	const secondsNumber = document.querySelector('#root .seconds-container .seconds-number')
+	secondsNumber.innerHTML = (new Date()).getSeconds().toString()
 </script>
 
 ```
@@ -80,10 +80,10 @@ You suspect this library might get huge, so you preemptively split the library i
 
  ```javascript
 const Rehact = {
-	createElement: (tagName, props, children) => {
+	createElement: (tagName, props, ...children) => {
 		const protectedPropNames = {className: 'class'}
-		const kebabCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
-		const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabCase(prop)}: ${object[prop]}; `, '')
+		const kebabifyCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
+		const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabifyCase(prop)}: ${object[prop]}; `, '')
 		const element = document.createElement(tagName)
 
 		Object.keys(props || {}).forEach(
@@ -132,18 +132,18 @@ You decide to wrap `Rehact.createElement` in a simple functions you can re-use:
 
 
 ```javascript
-const Text = (props, children) => Rehact.createElement('span', props, children)
-const Container = (props, children) => Rehact.createElement('div', props, children)
+const Text = (props, ...children) => Rehact.createElement('span', props, ...children)
+const Container = (props, ...children) => Rehact.createElement('div', props, ...children)
 
 RehactDOM.render(
-	Container({className: 'seconds-container',}, [
-		Text({className: 'seconds-number',}, [
+	Container({className: 'seconds-container',},
+		Text({className: 'seconds-number',},
 			(new Date()).getSeconds().toString()
-		]),
-		Text({style: {fontStyle: 'italic'}}, [
+		),
+		Text({style: {fontStyle: 'italic'}},
 			' seconds'
-		])
-	]),
+		)
+	),
 	document.querySelector('#root')
 )
 ```
@@ -230,18 +230,18 @@ Before you can think more, you grab distribution links to React, ReactDOM, and J
 ### ... everything still works.
 
 ```javascript
-const Text = (props, children) => React.createElement('span', props, children)
-const Container = (props, children) => React.createElement('div', props, children)
+const Text = (props, ...children) => React.createElement('span', props, ...children)
+const Container = (props, ...children) => React.createElement('div', props, ...children)
 
 ReactDOM.render(
-	Container({className: 'seconds-container',}, [
-		Text({className: 'seconds-number',}, [
+	Container({className: 'seconds-container',},
+		Text({className: 'seconds-number',},
 			(new Date()).getSeconds().toString()
-		]),
-		Text({style: {fontStyle: 'italic'}}, [
+		),
+		Text({style: {fontStyle: 'italic'}},
 			' seconds'
-		])
-	]),
+		)
+	),
 	document.querySelector('#root')
 )
 ```
@@ -257,7 +257,7 @@ ReactDOM.render(
 		<Text className="seconds-number">{(new Date()).getSeconds().toString()}</Text>
 		<Text style={{fontStyle: 'italic'}}>{' seconds'}</Text>
 	</Container>,
-	document.querySelector('#react-with-jsx-root')
+	document.querySelector('#root')
 )
 ````
 

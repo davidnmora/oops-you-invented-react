@@ -36,8 +36,8 @@ JSX brings us back to the clear, declarative HTML we love:
 
 <script>
 	// STATUS QUO, MIXES HTML AND JS: Directly mutating the existing DOM
-	const seconds = document.querySelector('#html-and-js-root .seconds-container .seconds-number')
-	seconds.innerHTML = (new Date()).getSeconds().toString()
+	const secondsNumber = document.querySelector('#html-and-js-root .seconds-container .seconds-number')
+	secondsNumber.innerHTML = (new Date()).getSeconds().toString()
 </script>
 
 
@@ -72,10 +72,10 @@ JSX brings us back to the clear, declarative HTML we love:
 	// Create a library to abstract the repetitive DOM manipulation code.
 	//For JS-friendliness, use "className" to steer clear of JS "class" keyword and use style objects (rather than strings)
 	const Rehact = {
-		createElement: (tagName, props, children) => {
+		createElement: (tagName, props, ...children) => {
 			const protectedPropNames = {className: 'class'}
-			const kebabCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
-			const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabCase(prop)}: ${object[prop]}; `, '')
+			const kebabifyCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
+			const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabifyCase(prop)}: ${object[prop]}; `, '')
 			const element = document.createElement(tagName)
 
 			Object.keys(props || {}).forEach(
@@ -105,9 +105,9 @@ JSX brings us back to the clear, declarative HTML we love:
 
 <script>
 	// Abstract DOM details to helper libraries: Rehact for creation and RehactDOM for appending to the existing DOM root
-	const secondsNumber = Rehact.createElement('span', {className: 'seconds-number'}, [(new Date()).getSeconds().toString()])
-	const secondsLabel = Rehact.createElement('span', {style: {fontStyle: 'italic'}}, [' seconds'])
-	const secondsContainer = Rehact.createElement('div', {className: 'seconds-container'}, [secondsNumber, secondsLabel])
+	const secondsNumber = Rehact.createElement('span', {className: 'seconds-number'}, (new Date()).getSeconds().toString())
+	const secondsLabel = Rehact.createElement('span', {style: {fontStyle: 'italic'}}, ' seconds')
+	const secondsContainer = Rehact.createElement('div', {className: 'seconds-container'}, secondsNumber, secondsLabel)
 
 	RehactDOM.render(
 		secondsContainer,
@@ -121,18 +121,18 @@ JSX brings us back to the clear, declarative HTML we love:
 	// Create & nest UI element functions for re-usability and readability.
 	// Use an uppercase naming convention to signal these are re-usable, "class-like" entities.
 	(() => {
-		const Text = (props, children) => Rehact.createElement('span', props, children)
-		const Container = (props, children) => Rehact.createElement('div', props, children)
+		const Text = (props, ...children) => Rehact.createElement('span', props, ...children)
+		const Container = (props, ...children) => Rehact.createElement('div', props, ...children)
 
 		RehactDOM.render(
-			Container({className: 'seconds-container',}, [
-				Text({className: 'seconds-number',}, [
+			Container({className: 'seconds-container',},
+				Text({className: 'seconds-number',},
 					(new Date()).getSeconds().toString()
-				]),
-				Text({style: {fontStyle: 'italic'}}, [
+				),
+				Text({style: {fontStyle: 'italic'}},
 					' seconds'
-				])
-			]),
+				)
+			),
 			document.querySelector('#rehact-functions-root')
 		)
 	})()
@@ -144,18 +144,18 @@ JSX brings us back to the clear, declarative HTML we love:
 <script>
 	// Import React libraries. Change "Rehact" --> "React" ... API matches exactly! (what a coincidence... ;)
 	(() => {
-		const Text = (props, children) => React.createElement('span', props, children)
-		const Container = (props, children) => React.createElement('div', props, children)
+		const Text = (props, ...children) => React.createElement('span', props, ...children)
+		const Container = (props, ...children) => React.createElement('div', props, ...children)
 
 		ReactDOM.render(
-			Container({className: 'seconds-container',}, [
-				Text({className: 'seconds-number',}, [
+			Container({className: 'seconds-container',},
+				Text({className: 'seconds-number',},
 					(new Date()).getSeconds().toString()
-				]),
-				Text({style: {fontStyle: 'italic'}}, [
+				),
+				Text({style: {fontStyle: 'italic'}},
 					' seconds'
-				])
-			]),
+				)
+			),
 			document.querySelector('#react-root')
 		)
 	})()
