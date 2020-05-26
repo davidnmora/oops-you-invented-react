@@ -9,10 +9,10 @@ But not you. Why? Because, way back in 2010, you accidentally invented React...
 ******
 
 ## It's 2010...
-Bieber is in full swing, you definitely don't have a crush on your programming buddy Alejandra, and web dev looks like this:
+Bieber is in full swing, you definitely don't have a crush on your friend Alejandra, and web dev looks like this:
 
 ```html
-<div id="html-and-js-root" style="border: 1px dotted red; margin: 12px">
+<div id="root">
 	<div class="seconds-container">
 		<span class="seconds-number"></span>
 		<span style="font-style: italic">seconds</span>
@@ -20,7 +20,7 @@ Bieber is in full swing, you definitely don't have a crush on your programming b
 </div>
 
 <script>
-	const seconds = document.querySelector('#html-and-js-root .seconds-container .seconds-number')
+	const seconds = document.querySelector('#root .seconds-container .seconds-number')
 	seconds.innerHTML = (new Date()).getSeconds().toString()
 </script>
 
@@ -31,7 +31,7 @@ Bieber is in full swing, you definitely don't have a crush on your programming b
 
 #### And here's what sucks about it: 😤
 1. **HTML** is static. And repetitive. Want 20 images? Get ready to copy and paste. Want to update them dynamically based on data? No can do. *Ahh, but isn't that where JS comes into play?* Sure, but it sucks...
-2. Writing & executing **JS** feels like being a surgeon who blindly reaches into his HTML patient's body, slices stuff up, and hopes it works.
+2. Writing & executing **JS** feels like being a surgeon who blindly reaches into her HTML patient's body, slices stuff up, and hopes it works.
 
 
 ## Then you have an 💡: let's do everything in JS!
@@ -65,18 +65,18 @@ const root = document.querySelector('#root')
 root.append(secondsContainer)
 ```
 
-You're kind of crushed: your 💡 wasn't so great.
+Turns out your 💡 wasn't so great. 😥
 
 Then you squint at your code and something hits you -- you're doing 3 things over and over again:
 1. creating DOM element of a certain type
 2. setting its properties
 3. appending it to a parent DOM element
 
-This is the perfect time to create re-usable functions that abstract those 3 things!
+So let's create a little library that abstract those 3 things!
 
-You name this "re-hacked" version of web dev `Rehact.js`.
+What to call it? This is a "re-hacked" version of web dev, so how about `Rehact.js`?
 
-You suspect this library might get huge, so you preemptively it in two: `Rehact` for element creation and `RehactDOM` for hooking into the existing DOM:
+You suspect this library might get huge, so you preemptively split the library in two: `Rehact` for element creation and `RehactDOM` for hooking into the existing DOM:
 
  ```javascript
 const Rehact = {
@@ -111,7 +111,7 @@ const RehactDOM = {
 }
 ```
 
-And my! isn't it easier on the eyes in action?
+And *my!* isn't it easier on the eyes...
 
 ```javascript 
 const secondsNumber = Rehact.createElement('span', {className: 'seconds-number'}, [(new Date()).getSeconds().toString()])
@@ -124,9 +124,8 @@ RehactDOM.render(
 )
 ```
 
-# Great, you've abstracted away the repetitive parts of DOM creation. But can you get the re-usable, declarative feel of HTML?
+# Great, you've abstracted away the repetitive details of DOM creation. But can you get the re-usable, declarative feel of HTML?
 
-// TODO: UPDATE THIS TO NEW, SIMPLER UI
 For example, what if you wanted to use a standard `SecondsContainer` abstraction throughout your code base?
 
 You decide to wrap `Rehact.createElement` in a simple functions you can re-use:
@@ -149,7 +148,16 @@ RehactDOM.render(
 )
 ```
 
-You look a little closer: your JS indentation is now reminding you of the original HTML in now reproduces. You're onto something!
+👀 You look a little closer: your JS indentation is now reminding you of the original HTML in now reproduces. The `Container` function wraps its two indented `Text` children, just like: 
+
+```html
+<div class="seconds-container">
+	<span class="seconds-number"></span>
+	<span style="font-style: italic">seconds</span>
+</div>
+```
+
+The spriti of HTML now lives in JS! 😁 ✨
 
 ## ... except it's still super ugly and no one wants to use it.
 
@@ -159,7 +167,7 @@ Including your best friend and coding mentor Alejandra.
 
 **Alejandra**: "You mean you wrecked web dev. It's all ugly now."
 
-**You**: "... uh, so what's the best way to send you it? your hotmail?"
+**You**: "... uh, so what's the best way to send you the Rehact library? your hotmail?"
 
 **Alejandra**: `$('.rehact').forgetIt()`
 
