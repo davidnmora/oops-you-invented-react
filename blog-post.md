@@ -4,7 +4,7 @@ It's the 2020s, and React.js is the most popular frontend framework. Everyone's 
 
 But not you. Why? Because, way back in 2010, you accidentally invented React...
 
-<sub>Everything that follows is real code. [Play with it here!](https://github.com/davidnmora/oops-you-invented-react)</sub>
+<sub>Everything that follows is real code. [Play with it in CodePen here!](https://codepen.io/davidnmora/pen/KKVPRdR)</sub>
 
 ******
 
