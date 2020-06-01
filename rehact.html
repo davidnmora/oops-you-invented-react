@@ -36,7 +36,9 @@ JSX brings us back to the clear, declarative HTML we love:
 
 <script>
 	// STATUS QUO, MIXES HTML AND JS: Directly mutating the existing DOM
-	const secondsNumber = document.querySelector('#html-and-js-root .seconds-container .seconds-number')
+	var root = document.getElementById('html-and-js-root')
+	var secondsNumber = root.getElementsByClassName('seconds-number')[0]
+
 	secondsNumber.innerHTML = (new Date()).getSeconds().toString()
 </script>
 

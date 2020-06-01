@@ -4,7 +4,7 @@ It's the 2020s, and React.js is the most popular frontend framework. Everyone's 
 
 But not you. Why? Because, way back in 2010, you accidentally invented React...
 
-<sub>[Everything that follows is real code. Play with it here!](https://github.com/davidnmora/oops-you-invented-react)</sub>
+<sub>Everything that follows is real code. [Play with it here!](https://github.com/davidnmora/oops-you-invented-react)</sub>
 
 ******
 
@@ -13,15 +13,17 @@ Bieber is in full swing, you definitely don't have a crush on your friend Alejan
 
 ```html
 <div id="root">
-	<div class="seconds-container">
-		<span class="seconds-number"></span>
-		<span style="font-style: italic">seconds</span>
-	</div>
+   <div class="seconds-container">
+      <span class="seconds-number"></span>
+      <span style="font-style: italic">seconds</span>
+   </div>
 </div>
 
 <script>
-	const secondsNumber = document.querySelector('#root .seconds-container .seconds-number')
-	secondsNumber.innerHTML = (new Date()).getSeconds().toString()
+   var root = document.getElementById('root')
+   var secondsNumber = root.getElementsByClassName('seconds-number')[0]
+   	
+   secondsNumber.innerHTML = (new Date()).getSeconds().toString()
 </script>
 
 ```
@@ -65,81 +67,94 @@ const root = document.querySelector('#root')
 root.append(secondsContainer)
 ```
 
+<sub>TO CAREFUL READERS: I realize I'm using JS features *not yet available* in 2010 here. I'm just focusing on the big ideas and using familiar, modern syntax. Rest assured this all can be done in pre-ECMAScript 2015, too. :)</sub>
+
 Turns out your 💡 wasn't so great. 😥
 
 Then you squint at your code and something hits you -- you're doing 3 things over and over again:
-1. creating DOM element of a certain type
+1. creating a DOM element of a certain type
 2. setting its properties
-3. appending it to a parent DOM element
+3. inserting its children (if needed)
+4. appending it to a parent DOM element
 
-So let's create a little library that abstract those 3 things! You imagine the API should look something like this:
+So let's create a little library that abstract those 4 things! 
+
+You imagine the API should look something like this, with properties ("props") like `class` listed as `className` so there's no collision with protected JS keywords:
 
 ```javascript
+const props = {
+	className: 'seconds-container',
+	style: {backgroundColor: 'blue'} 
+	/* etc */
+}
+
 const secondsContainer = createElement(
-	'div',
-	{className: 'seconds-container'},
-	/* its children */
+   'div',
+   props,
+   /* any children */
 )
 
 render(
-	secondsContainer,
-	document.querySelector('#root')
+   secondsContainer,
+   document.querySelector('#root')
 )
 ```
 
-After a few hours, you work out the details of the two generalized functions.
+After a few hours, you work out the details of these two functions in a generalized way:
 
 ### 1. DOM element creation:
 
 ```javascript
 const createElement = (tagName, props, ...children) => {
-	// (constants and helper functions)
-	const PROTECTED_PROP_NAMES = { className: 'class' }
-	const kebabifyCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
-	const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabifyCase(prop)}: ${object[prop]}; `, '')
-	
-	// Create a new element, unattached to any other elements or the DOM itself
-	const element = document.createElement(tagName)
+   // (constants and helper functions)
+   const PROTECTED_PROP_NAMES = { className: 'class' }
+   const kebabifyCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
+   const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabifyCase(prop)}: ${object[prop]}; `, '')
+   
+   // Create a new element, unattached to any other elements or the DOM itself
+   const element = document.createElement(tagName)
 
-	// Set the elements attributes (called "properties" when the element lives in the DOM, or "props" for short)
-	Object.keys(props || {}).forEach(
-		propName => {
-			const propValue = propName === 'style' ? cssifyObject(props[propName]) : props[propName]
-			element.setAttribute(PROTECTED_PROP_NAMES[propName] || propName, propValue)
-		}
-	)
+   // Set the elements attributes (called "properties" when the element lives in the DOM, or "props" for short)
+   Object.keys(props || {}).forEach(
+      propName => {
+         const propValue = propName === 'style' ? cssifyObject(props[propName]) : props[propName]
+         element.setAttribute(PROTECTED_PROP_NAMES[propName] || propName, propValue)
+      }
+   )
 
-	// Nest any child elements that exist within this element.
-	children.forEach(child => {
-		if (typeof(child) === 'string') {
-			element.innerHTML += child
-		} else {
-			element.append(child)
-		}
-	})
+   // Nest any child elements that exist within this element.
+   children.forEach(child => {
+      if (typeof(child) === 'string') {
+         element.innerHTML += child
+      } else {
+         element.append(child)
+      }
+   })
 
-	return element // ... all done!
+   return element // ... all done!
 }
 ```
 
-### ... and 2. Appending your top level element into the existing DOM:
+### 2. Hooking your top level element into the existing DOM:
 
 ```javascript
 const render = (container, root) => root.append(container)
 ```
 
-Wow, this is starting to feel like a legit library. *What should it be called?* This is a "re-hacked" version of web dev, so how about `Rehact.js`?
+Wow, this is starting to feel like a legit library. *What should it be called?* 
+
+This is a "re-hacked" version of web dev, so how about `Rehact.js`?
 
 You suspect this library might get huge, so you preemptively split the library in two: `Rehact` for element creation and `RehactDOM` for hooking into the existing DOM:
 
  ```javascript
 const Rehact = {
-	createElement: (tagName, props, ...children) => {/* etc */}
+   createElement: (tagName, props, ...children) => {/* etc */}
 }
 
 
 const RehactDOM = {
-	render: (container, root) => root.append(container)
+   render: (container, root) => root.append(container)
 }
 ```
 
@@ -151,16 +166,16 @@ const secondsLabel = Rehact.createElement('span', {style: {fontStyle: 'italic'}}
 const secondsContainer = Rehact.createElement('div', {className: 'seconds-container'}, [secondsNumber, secondsLabel])
 
 RehactDOM.render(
-	secondsContainer,
-	document.querySelector('#root')
+   secondsContainer,
+   document.querySelector('#root')
 )
 ```
 
 # Great, you've abstracted away the repetitive details of DOM creation. But can you get the re-usable, declarative feel of HTML?
 
-For example, what if you wanted to use a standard `SecondsContainer` abstraction throughout your code base?
+For example, what if you wanted to use a standard `SecondsContainer` abstraction throughout your codebase?
 
-You decide to wrap `Rehact.createElement` in a simple functions you can re-use:
+You decide to wrap `Rehact.createElement` in a simple functions you can re-use, and nest them inside each other to look like HTML:
 
 
 ```javascript
@@ -168,30 +183,30 @@ const Text = (props, ...children) => Rehact.createElement('span', props, ...chil
 const Container = (props, ...children) => Rehact.createElement('div', props, ...children)
 
 RehactDOM.render(
-	Container({className: 'seconds-container',},
-		Text({className: 'seconds-number',},
-			(new Date()).getSeconds().toString()
-		),
-		Text({style: {fontStyle: 'italic'}},
-			' seconds'
-		)
-	),
-	document.querySelector('#root')
+   Container({className: 'seconds-container',},
+      Text({className: 'seconds-number',},
+         (new Date()).getSeconds().toString()
+      ),
+      Text({style: {fontStyle: 'italic'}},
+         ' seconds'
+      )
+   ),
+   document.querySelector('#root')
 )
 ```
 
-👀 You look a little closer: your JS indentation is now reminding you of the original HTML in now reproduces. The `Container` function wraps its two indented `Text` children, just like: 
+👀 Wahoo! Just as you'd hoped, your JS is now seriously reminding you of the original HTML it now reproduces. The `Container` function wraps its two indented `Text` children, just like `div` did for the `span` elements: 
 
 ```html
 <div class="seconds-container">
-	<span class="seconds-number"></span>
-	<span style="font-style: italic">seconds</span>
+   <span class="seconds-number"></span>
+   <span style="font-style: italic">seconds</span>
 </div>
 ```
 
 The spirit of HTML now lives in JS! 😁 ✨
 
-## ... except it's still super ugly and no one wants to use it.
+## ... except it's a tangle of parentheses and no one wants to use it.
 
 Including your best friend and coding mentor Alejandra.
 
@@ -204,7 +219,7 @@ Including your best friend and coding mentor Alejandra.
 **Alejandra**: `$('.rehact').forgetIt()`
 
 
-## Forget Alejandra. She wasn't *that* cool anyway... (plus, you definitely never had a crush on her)
+## Forget Alejandra. She wasn't *that* cool anyway...
 
 But after blocking Alejandra on Myspace (and then un-blocking her to get some debugging help), you realize she was onto something:
 
@@ -214,22 +229,28 @@ That goes for websites, devices, and (it turns out) programming libraries.
 
 So you send Alejandra another message:
 
-**You**: "I get that Rehact is a tangle of braces and parens. But it's powerful. How might I make it more enjoyable to code with?"
+**You**: "I get that Rehact is a tangle of parens and nested functions. But it's powerful. How might I make it more enjoyable to code with?"
+
 **Alejandra**: "Make it HTML"
+
 **You**: "I hate you"
+
 **Alejandra**: "Anytime"
 
 ## Forget Alejandra!!
 
-😤
+😤!
 
-## 🤔 ... wait, actually don't, that's brilliant! 💡
+... 🤔 ...
 
-It's true: people *already* know and love HTML. And Rehact is largely just a JS-flavored way of specifying HTML. 
+
+##  ... no, wait, actually that's brilliant! 💡
+
+It's *true*: people already know and love HTML. And Rehact is largely just a JS-flavored way of specifying HTML. 
 
 *So what if you let people just write HTML inside your `Rehact` functions*, and then just transpiled it back to valid `Rehact` JS code for execution?
 
-Not only could you let people write HTML elements like `div` or `h2`, but you could also let people represent `Rehact` functions as if they were HTML, eg re-writing `Container({className: 'container'})` as `<Container class="container" />`.
+Not only could you let people write HTML elements like `div` or `h2`, but you could also let people represent `Rehact` functions as if they were HTML, eg re-writing `Container({className: 'container'})` as `<Container className="container" />`.
 
 You could call the transpiler `JSH`: JS + HTML. (Or maybe `JSX`, for JS + XML.)
 
@@ -268,15 +289,15 @@ const Text = (props, ...children) => React.createElement('span', props, ...child
 const Container = (props, ...children) => React.createElement('div', props, ...children)
 
 ReactDOM.render(
-	Container({className: 'seconds-container',},
-		Text({className: 'seconds-number',},
-			(new Date()).getSeconds().toString()
-		),
-		Text({style: {fontStyle: 'italic'}},
-			' seconds'
-		)
-	),
-	document.querySelector('#root')
+   Container({className: 'seconds-container',},
+      Text({className: 'seconds-number',},
+         (new Date()).getSeconds().toString()
+      ),
+      Text({style: {fontStyle: 'italic'}},
+         ' seconds'
+      )
+   ),
+   document.querySelector('#root')
 )
 ```
 
@@ -287,17 +308,17 @@ const Text = (props) => <span {...props}>{props.children}</span>
 const Container = (props) => <div {...props}>{props.children}</div>
 
 ReactDOM.render(
-	<Container className="seconds-container">
-		<Text className="seconds-number">{(new Date()).getSeconds().toString()}</Text>
-		<Text style={{fontStyle: 'italic'}}>{' seconds'}</Text>
-	</Container>,
-	document.querySelector('#root')
+   <Container className="seconds-container">
+      <Text className="seconds-number">{(new Date()).getSeconds().toString()}</Text>
+      <Text style={{fontStyle: 'italic'}}>{' seconds'}</Text>
+   </Container>,
+   document.querySelector('#root')
 )
 ```
 
 You lean back in your chair and smile.
 
-"Oops," you chuckle, "I guess I accidentally invented React.js..."
+"Oops," you chuckle, "I guess I invented React.js..."
 
 An email notification chimes. Alejandra's inviting you to some platform called "Facebook." You scoff.
 
@@ -305,11 +326,11 @@ An email notification chimes. Alejandra's inviting you to some platform called "
 
 ****
 
-This post is a distillation of [a talk I gave at an Inland Empire Software Development meetup](https://youtu.be/3MXrYVqYklg?t=37) .
+This post is a distillation of [a talk I gave at an Inland Empire Software Development meetup](https://youtu.be/3MXrYVqYklg?t=37).
 
 The code was directly inspired by [Kent C. Dodds' talk, "The introduction to React you've been missing,"](https://youtu.be/SAIdyBFHfVU) and the story was based loosely off [this account by React's creator](https://youtu.be/5fG_lyNuEAw?t=702) (no, not Dan Abramov, silly)
 
-Please note this article is meant as **an incomplete, rough introduction to React's origin**. While [all the code really works](https://github.com/davidnmora/oops-you-invented-react), it completely skips over many things, most glaringly React's "virtual DOM."
+Please note this article is meant as **an incomplete, rough introduction to React's origin**. While [all the code really works](https://github.com/davidnmora/oops-you-invented-react), it completely skips over many things that were core to its original vision, most glaringly state management and React's "virtual DOM."
 
 However, omitting class-based components *was* intentional. Let's please forget those ever existed. 😉
 
