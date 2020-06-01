@@ -73,18 +73,23 @@ JSX brings us back to the clear, declarative HTML we love:
 	//For JS-friendliness, use "className" to steer clear of JS "class" keyword and use style objects (rather than strings)
 	const Rehact = {
 		createElement: (tagName, props, ...children) => {
-			const protectedPropNames = {className: 'class'}
+			// (constants and helper functions)
+			const PROTECTED_PROPS_NAMES = { className: 'class' }
 			const kebabifyCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
 			const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabifyCase(prop)}: ${object[prop]}; `, '')
+
+			// Create a new element, unattached to any other elements or the DOM itself
 			const element = document.createElement(tagName)
 
+			// Set the elements attributes (called "properties" when the element lives in the DOM, or "props" for short)
 			Object.keys(props || {}).forEach(
 				propName => {
 					const propValue = propName === 'style' ? cssifyObject(props[propName]) : props[propName]
-					element.setAttribute(protectedPropNames[propName] || propName, propValue)
+					element.setAttribute(PROTECTED_PROPS_NAMES[propName] || propName, propValue)
 				}
 			)
 
+			// Nest any child elements that exist within this element.
 			children.forEach(child => {
 				if (typeof(child) === 'string') {
 					element.innerHTML += child
@@ -93,7 +98,7 @@ JSX brings us back to the clear, declarative HTML we love:
 				}
 			})
 
-			return element
+			return element // ... all done!
 		}
 	}
 
@@ -104,15 +109,17 @@ JSX brings us back to the clear, declarative HTML we love:
 </script>
 
 <script>
-	// Abstract DOM details to helper libraries: Rehact for creation and RehactDOM for appending to the existing DOM root
-	const secondsNumber = Rehact.createElement('span', {className: 'seconds-number'}, (new Date()).getSeconds().toString())
-	const secondsLabel = Rehact.createElement('span', {style: {fontStyle: 'italic'}}, ' seconds')
-	const secondsContainer = Rehact.createElement('div', {className: 'seconds-container'}, secondsNumber, secondsLabel)
+	(() => {
+		// Abstract DOM details to helper libraries: Rehact for creation and RehactDOM for appending to the existing DOM root
+		const secondsNumber = Rehact.createElement('span', {className: 'seconds-number'}, (new Date()).getSeconds().toString())
+		const secondsLabel = Rehact.createElement('span', {style: {fontStyle: 'italic'}}, ' seconds')
+		const secondsContainer = Rehact.createElement('div', {className: 'seconds-container'}, secondsNumber, secondsLabel)
 
-	RehactDOM.render(
-		secondsContainer,
-		document.querySelector('#rehact-root')
-	)
+		RehactDOM.render(
+			secondsContainer,
+			document.querySelector('#rehact-root')
+		)
+	})()
 
 </script>
 

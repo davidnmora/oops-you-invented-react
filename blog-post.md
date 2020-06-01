@@ -72,37 +72,69 @@ Then you squint at your code and something hits you -- you're doing 3 things ove
 2. setting its properties
 3. appending it to a parent DOM element
 
-So let's create a little library that abstract those 3 things!
+So let's create a little library that abstract those 3 things! You imagine the API should look something like this:
 
-What to call it? This is a "re-hacked" version of web dev, so how about `Rehact.js`?
+```javascript
+const secondsContainer = createElement(
+	'div',
+	{className: 'seconds-container'},
+	/* its children */
+)
+
+render(
+	secondsContainer,
+	document.querySelector('#root')
+)
+```
+
+After a few hours, you work out the details of the two generalized functions.
+
+### 1. DOM element creation:
+
+```javascript
+const createElement = (tagName, props, ...children) => {
+	// (constants and helper functions)
+	const PROTECTED_PROP_NAMES = { className: 'class' }
+	const kebabifyCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
+	const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabifyCase(prop)}: ${object[prop]}; `, '')
+	
+	// Create a new element, unattached to any other elements or the DOM itself
+	const element = document.createElement(tagName)
+
+	// Set the elements attributes (called "properties" when the element lives in the DOM, or "props" for short)
+	Object.keys(props || {}).forEach(
+		propName => {
+			const propValue = propName === 'style' ? cssifyObject(props[propName]) : props[propName]
+			element.setAttribute(PROTECTED_PROP_NAMES[propName] || propName, propValue)
+		}
+	)
+
+	// Nest any child elements that exist within this element.
+	children.forEach(child => {
+		if (typeof(child) === 'string') {
+			element.innerHTML += child
+		} else {
+			element.append(child)
+		}
+	})
+
+	return element // ... all done!
+}
+```
+
+### ... and 2. Appending your top level element into the existing DOM:
+
+```javascript
+const render = (container, root) => root.append(container)
+```
+
+Wow, this is starting to feel like a legit library. *What should it be called?* This is a "re-hacked" version of web dev, so how about `Rehact.js`?
 
 You suspect this library might get huge, so you preemptively split the library in two: `Rehact` for element creation and `RehactDOM` for hooking into the existing DOM:
 
  ```javascript
 const Rehact = {
-	createElement: (tagName, props, ...children) => {
-		const protectedPropNames = {className: 'class'}
-		const kebabifyCase = str => str.replace(/([a-z0-9]|(?=[A-Z]))([A-Z])/g, '$1-$2').toLowerCase()
-		const cssifyObject = (object) => Object.keys(object).reduce((accumulator, prop) => `${kebabifyCase(prop)}: ${object[prop]}; `, '')
-		const element = document.createElement(tagName)
-
-		Object.keys(props || {}).forEach(
-			propName => {
-				const propValue = propName === 'style' ? cssifyObject(props[propName]) : props[propName]
-				element.setAttribute(protectedPropNames[propName] || propName, propValue)
-			}
-		)
-
-		children.forEach(child => {
-			if (typeof(child) === 'string') {
-				element.innerHTML += child
-			} else {
-				element.append(child)
-			}
-		})
-
-		return element
-	}
+	createElement: (tagName, props, ...children) => {/* etc */}
 }
 
 
@@ -111,7 +143,7 @@ const RehactDOM = {
 }
 ```
 
-And *my!* isn't it easier on the eyes...
+And *my!* look how much cleaner your library make the code:
 
 ```javascript 
 const secondsNumber = Rehact.createElement('span', {className: 'seconds-number'}, [(new Date()).getSeconds().toString()])
@@ -157,7 +189,7 @@ RehactDOM.render(
 </div>
 ```
 
-The spriti of HTML now lives in JS! 😁 ✨
+The spirit of HTML now lives in JS! 😁 ✨
 
 ## ... except it's still super ugly and no one wants to use it.
 
