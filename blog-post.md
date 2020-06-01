@@ -71,15 +71,15 @@ root.append(secondsContainer)
 
 Turns out your 💡 wasn't so great. 😥
 
-Then you squint at your code and something hits you -- you're doing 3 things over and over again:
+Then you squint at your code and something hits you -- you're doing 4 things over and over again:
 1. creating a DOM element of a certain type
 2. setting its properties
 3. inserting its children (if needed)
-4. appending it to a parent DOM element
+4. ... and appending it an parent element which already exists in the DOM
 
 So let's create a little library that abstract those 4 things! 
 
-You imagine the API should look something like this, with properties ("props") like `class` listed as `className` so there's no collision with protected JS keywords:
+You imagine the API should look something like this, with properties like `class` listed as `className` to avoid collision with protected JS `class` keyword and CSS specified as an object with camelCase property names:
 
 ```javascript
 const props = {
@@ -102,7 +102,7 @@ render(
 
 After a few hours, you work out the details of these two functions in a generalized way:
 
-### 1. DOM element creation:
+### 1. A function for DOM element creation:
 
 ```javascript
 const createElement = (tagName, props, ...children) => {
@@ -122,7 +122,7 @@ const createElement = (tagName, props, ...children) => {
       }
    )
 
-   // Nest any child elements that exist within this element.
+   // Append any child elements that should exist within this element. These could be just text or an element.
    children.forEach(child => {
       if (typeof(child) === 'string') {
          element.innerHTML += child
@@ -135,7 +135,7 @@ const createElement = (tagName, props, ...children) => {
 }
 ```
 
-### 2. Hooking your top level element into the existing DOM:
+### 2. A function to hook your top level element into the existing DOM:
 
 ```javascript
 const render = (container, root) => root.append(container)
@@ -158,7 +158,7 @@ const RehactDOM = {
 }
 ```
 
-And *my!* look how much cleaner your library make the code:
+And *my!* look how much cleaner your library make your code:
 
 ```javascript 
 const secondsNumber = Rehact.createElement('span', {className: 'seconds-number'}, [(new Date()).getSeconds().toString()])
@@ -175,7 +175,7 @@ RehactDOM.render(
 
 For example, what if you wanted to use a standard `SecondsContainer` abstraction throughout your codebase?
 
-You decide to wrap `Rehact.createElement` in a simple functions you can re-use, and nest them inside each other to look like HTML:
+You decide to wrap `Rehact.createElement` in a simple functions you can re-use, and which are easier to read when nested inside each other similar to HTML:
 
 
 ```javascript
@@ -195,7 +195,7 @@ RehactDOM.render(
 )
 ```
 
-👀 Wahoo! Just as you'd hoped, your JS is now seriously reminding you of the original HTML it now reproduces. The `Container` function wraps its two indented `Text` children, just like `div` did for the `span` elements: 
+👀 Wahoo! Just as you'd hoped, your JS is now seriously reminding you of the original HTML. The `Container` function wraps its two indented `Text` children, just like `div` did for its `span` children: 
 
 ```html
 <div class="seconds-container">
@@ -216,7 +216,7 @@ Including your best friend and coding mentor Alejandra.
 
 **You**: "... uh, so what's the best way to send you the Rehact library? your hotmail?"
 
-**Alejandra**: `$('.rehact').forgetIt()`
+**Alejandra**: `$('#rehact').forgetIt()`
 
 
 ## Forget Alejandra. She wasn't *that* cool anyway...
@@ -250,11 +250,11 @@ It's *true*: people already know and love HTML. And Rehact is largely just a JS-
 
 *So what if you let people just write HTML inside your `Rehact` functions*, and then just transpiled it back to valid `Rehact` JS code for execution?
 
-Not only could you let people write HTML elements like `div` or `h2`, but you could also let people represent `Rehact` functions as if they were HTML, eg re-writing `Container({className: 'container'})` as `<Container className="container" />`.
+Not only could you let people write HTML elements like `div` or `h2`, but you could also let people represent `Rehact` functions *as if they were HTML*. For example, re-writing `Container({className: 'container'})` as `<Container className="container" />`.
 
 You could call the transpiler `JSH`: JS + HTML. (Or maybe `JSX`, for JS + XML.)
 
-It's a programming "user interface" that'll make `Rehact` a joy to adopt!
+This would be a programming "user interface" that'd make `Rehact` a joy to adopt!
 
 But before you can begin on the `JSX` transpiler, you get a message from Alejandra:
 
@@ -264,11 +264,9 @@ You freeze.
 
 You've been known to be absent-minded, but how did you accidentally miss *a decade of web dev evolution*?
 
-But surely, even in a decade, no one's thought of something as genius as `Rehact`: it's declarative, component-based, and easy to learn once and use anywhere.
+But surely, even in a decade, no one's thought of something as genius as `Rehact`: it's **declarative**, **component-based**, and easy to **learn once and write anywhere**.
 
-Scanning the web for popular libraries, `React.js` catches your eye.
-
-You open the homepage:
+Scanning the web for popular libraries, `React.js` catches your eye, and you open the homepage:
 
 ![image](https://user-images.githubusercontent.com/6570507/82911380-af7a0200-9f20-11ea-9095-3da44ce0ab42.png)
 
@@ -301,7 +299,7 @@ ReactDOM.render(
 )
 ```
 
-## ... even the `JSX` "user interface":
+## ... even your `JSX` "user interface" idea:
 
 ```javascript
 const Text = (props) => <span {...props}>{props.children}</span>
