@@ -328,7 +328,7 @@ This post is a distillation of [a talk I gave at an Inland Empire Software Devel
 
 The code was directly inspired by [Kent C. Dodds' talk, "The introduction to React you've been missing,"](https://youtu.be/SAIdyBFHfVU) and the story was based loosely off [this account by React's creator](https://youtu.be/5fG_lyNuEAw?t=702) (no, not Dan Abramov, silly)
 
-Please note this article is meant as **an incomplete, rough introduction to React's origin**. While [all the code really works](https://github.com/davidnmora/oops-you-invented-react), it completely skips over many things that were core to its original vision, most glaringly state management and React's "virtual DOM."
+Please note this article is meant as **an incomplete, rough introduction to React's origin**. While [all the code really works](https://github.com/davidnmora/oops-you-invented-react), it completely skips over many things that were core to its original vision, most glaringly [state management](https://reactjs.org/docs/state-and-lifecycle.html) and React's ["virtual DOM."](https://reactjs.org/docs/reconciliation.html)
 
-However, omitting class-based components *was* intentional. Let's please forget those ever existed. 😉
+However, omitting class-based components *was* intentional. Let's please forget those ever existed. 😉 [Checkout Hooks for state management and more!](https://reactjs.org/docs/hooks-state.html)
 
