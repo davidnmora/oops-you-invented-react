@@ -27,6 +27,11 @@ Bieber is in full swing, you definitely don't have a crush on your friend Alejan
 </script>
 
 ```
+... and produces something like this (with the number varying based on when you load the page):
+
+<img width="301" alt="19 seconds" src="https://user-images.githubusercontent.com/6570507/83552783-2aae5b80-a4bf-11ea-8c58-79a03f5a037f.png">
+
+
 #### Here's what you ❤️ about it:
 1. **HTML** is super declarative: it shows you exactly the structure of the page.
 2. **JS** is event-driven & composable. You can update stuff on the fly.
