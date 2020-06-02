@@ -145,7 +145,7 @@ Wow, this is starting to feel like a legit library. *What should it be called?*
 
 This is a "re-hacked" version of web dev, so how about `Rehact.js`?
 
-You suspect this library might get huge, so you preemptively split the library in two: `Rehact` for element creation and `RehactDOM` for hooking into the existing DOM:
+You split the library in two: `Rehact` for element creation and `RehactDOM` for rendering into the existing DOM*:
 
  ```javascript
 const Rehact = {
@@ -157,6 +157,8 @@ const RehactDOM = {
    render: (container, root) => root.append(container)
 }
 ```
+<sub>*Astute readers will recognize that ReactDOM was actually split out of React only with the advent of ReactNative and other non-DOM rendering environments.</sub>
+
 
 And *my!* look how much cleaner your library make your code:
 
